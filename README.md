@@ -8,7 +8,7 @@ So, in order to setup the backend side, let’s create a new folder for the proj
 1. `mkdir notes-server`
 2. `cd notes-server`
 3. `npm init -y`
-4. `npm install fastify mongoose --save`
+4. `npm install fastify @types/mongoose --save`
 5. `mkdir src`
 6. `touch src/index.ts`
 
@@ -144,3 +144,39 @@ We can now perform:
 *A DELETE call to `/api/notes:id` to Delete a specific note
 
 The `:id` is obvously a placeholder for the id of our document, and we will be able to access it inside the request params of our route handler function as `request.params.id` . (We’ll take care of the handlers in the next section).
+
+As shown in the file above, we need to have access to the app object in order to call the route handlers on it, therefore, we must import this file into our index.js and call it with the fastify app as its parameter:
+
+```
+import fastify from 'fastify';
+import mongoose from 'mongoose';
+import noteRoutes from './routes/noteRoutes';
+
+const app = fastify();
+
+try {
+  mongoose.connect('mongodb://localhost:27017/notes_db');
+} catch (e) {
+  console.error(e);
+}
+
+noteRoutes(app);
+
+app.listen(5000, (err, address) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  console.log(`Server running on ${address}`);
+});
+
+```
+
+## Moving API Route Handlers (Controller)
+Now that we have our routes, we need to define our handlers for each of the routes. For the sake of cleaninless, we will move our handler functions in an external file, where we will define the logics and from which we will export and assign them to their respective routes. We refer at such files as controllers. So, as a first step, let’s create a controllers folder in our src and inside of it, let’s add a new file named notesController.js. As usual, inside the project root folder let’s open our terminal and type:
+
+```
+mkdir src/controllers
+touch src/controllers/notesController.js
+```
+Let’s now work on the newly created controller, notesController.ts :
