@@ -61,7 +61,7 @@ Finally, the the app.listen function sets our application listening to the port 
 
 ```
 "scripts": {
-    "start": "node src/index.js",
+    "start": "node src/index.ts",
  },
 ```
 If you now run npm start from your terminal you should see a message saying “Server running on http://127.0.0.1:3000”. Open your browser at http://localhost:3000 and you should see our “Hello world!” string, meaning our app is running successfully!
@@ -71,7 +71,7 @@ At this point, we want to have a notes collection inside our database, and we al
 
 `
 mkdir src/models
-touch src/models/Note.js
+touch src/models/Note.ts
 `
 
 Let’s edit this new file as follows:
@@ -94,3 +94,53 @@ export default Note;
 ```
 
 Basically we are using Mongoose’s Schema object to explicitely declare to our MongoDB that our notes will have a mandatory propery called text, which is, naturally, a string. We are then defining it as a model with the mongoose.model function. The first parameter is a string that will be used by mongo to define the name of the collection: given a “note” model, we will find a “notes” collection in our database after our very first operation with a Note. Finally, we export the newly created Note model and make it available throughout the application.
+
+## Defining API Routes (Endpoints)
+Inside of our src folder, we will now create a new routes folder, with a noteRoutes.js file in it. So in the terminal, let’s type this:
+
+`mkdir src/routes
+touch src/routes/noteRoutes.ts`
+
+Within this file, we will export a function whose only parameter will be the entire fastify app, and whose return value is a list of routes to be added to the app itself. For each route, we specify the HTTP verb to be handled, a url, and, finally a handler function, that we will define in a second step.
+
+```
+import { FastifyInstance } from 'fastify';
+
+export default async function noteRoute(app: FastifyInstance) {
+  // create a note
+  app.post('/api/notes', async (request, reply) => {
+    // Your code here
+  });
+  
+  // get the list of notes
+  app.get('/api/notes', async (request, reply) => {
+    // Your code here
+  });
+  
+  // get a single note
+  app.get('/api/notes/:id', async (request, reply) => {
+    // Your code here
+  });
+  
+  // update a note
+  app.put('/api/notes/:id', async (request, reply) => {
+    // Your code here
+  });
+  
+  // delete a note
+  app.delete('/api/notes/:id', async (request, reply) => {
+    // Your code here
+  });
+}
+
+```
+
+We can now perform:
+
+*A POST call to `api/notes` to Create a note
+*A GET call to `api/notes` to get the List of all of our notes
+*A GET call to `/api/notes:id` to retreive a single note
+*A PUT call to `/api/notes:id` to Update a given note
+*A DELETE call to `/api/notes:id` to Delete a specific note
+
+The `:id` is obvously a placeholder for the id of our document, and we will be able to access it inside the request params of our route handler function as `request.params.id` . (We’ll take care of the handlers in the next section).
