@@ -5,12 +5,12 @@ Before we begin, make sure to have globally installed Node.js on your machine, t
 
 So, in order to setup the backend side, let’s create a new folder for the project, install our dependencies and set up the structure. In your terminal:
 
-1. mkdir notes-server
-2. cd notes-server
-3. npm init -y
-4. npm install fastify mongoose --save
-5. mkdir src
-6. touch src/index.ts
+1. `mkdir notes-server`
+2. `cd notes-server`
+3. `npm init -y`
+4. `npm install fastify mongoose --save`
+5. `mkdir src`
+6. `touch src/index.ts`
 
 So, line by line: (1) we created a notes-backend folder, (2) entered the folder, (3) initialized a Node project, (4) installed Fastify and Mongoose as dependencies, (5)created a new src folder with (6) an index.js file which will be the root for our application.
 
