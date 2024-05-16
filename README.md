@@ -64,7 +64,7 @@ Finally, the the app.listen function sets our application listening to the port 
     "start": "node src/index.js",
  },
 ```
-If you now run npm start from your terminal you should see a message saying “Server running on http://127.0.0.1:5000”. Open your browser at http://localhost:5000 and you should see our “Hello world!” string, meaning our app is running successfully!
+If you now run npm start from your terminal you should see a message saying “Server running on http://127.0.0.1:3000”. Open your browser at http://localhost:3000 and you should see our “Hello world!” string, meaning our app is running successfully!
 
 ## Defining the Note Schema
 At this point, we want to have a notes collection inside our database, and we also need to define the properties that a note document should have. We do so by creating a Note Model and providing a Model Schema, that is, an object with all the specification for a typical note document. Let’s create a new folder and file inside our project; in your project folder terminal:
