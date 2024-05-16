@@ -4,14 +4,14 @@
 Before we begin, make sure to have globally installed Node.js on your machine, this is crucial to import all our dependencies and set up both the backend and the frontend projects. Also, I will use a local instance of MongoDB for the database, but you can also use a free cluster hosted on MongoDB Atlas.
 
 So, in order to setup the backend side, let’s create a new folder for the project, install our dependencies and set up the structure. In your terminal:
-
-1. `mkdir notes-server`
-2. `cd notes-server`
-3. `npm init -y`
-4. `npm install fastify @types/mongoose --save`
-5. `mkdir src`
-6. `touch src/index.ts`
-
+```
+mkdir notes-server
+cd notes-server
+npm init -y 
+npm install fastify @types/mongoose --save
+mkdir src
+touch src/index.ts
+```
 So, line by line: (1) we created a notes-backend folder, (2) entered the folder, (3) initialized a Node project, (4) installed Fastify and Mongoose as dependencies, (5)created a new src folder with (6) an index.js file which will be the root for our application.
 
 Connection to MongoDB and app running
@@ -69,10 +69,10 @@ If you now run npm start from your terminal you should see a message saying “S
 ## Defining the Note Schema
 At this point, we want to have a notes collection inside our database, and we also need to define the properties that a note document should have. We do so by creating a Note Model and providing a Model Schema, that is, an object with all the specification for a typical note document. Let’s create a new folder and file inside our project; in your project folder terminal:
 
-`
+```
 mkdir src/models
 touch src/models/Note.ts
-`
+```
 
 Let’s edit this new file as follows:
 
