@@ -1,6 +1,6 @@
 # ReactAdmin-FullStack-CRUD
 
-# Project Setup (Backend)
+## Project Setup (Backend)
 Before we begin, make sure to have globally installed Node.js on your machine, this is crucial to import all our dependencies and set up both the backend and the frontend projects. Also, I will use a local instance of MongoDB for the database, but you can also use a free cluster hosted on MongoDB Atlas.
 
 So, in order to setup the backend side, let’s create a new folder for the project, install our dependencies and set up the structure. In your terminal:
@@ -64,3 +64,33 @@ Finally, the the app.listen function sets our application listening to the port 
     "start": "node src/index.js",
  },
 ```
+If you now run npm start from your terminal you should see a message saying “Server running on http://127.0.0.1:5000”. Open your browser at http://localhost:5000 and you should see our “Hello world!” string, meaning our app is running successfully!
+
+## Defining the Note Schema
+At this point, we want to have a notes collection inside our database, and we also need to define the properties that a note document should have. We do so by creating a Note Model and providing a Model Schema, that is, an object with all the specification for a typical note document. Let’s create a new folder and file inside our project; in your project folder terminal:
+
+```
+mkdir src/models
+touch src/models/Note.js
+```
+
+Let’s edit this new file as follows:
+
+```
+import mongoose, { Schema, Document, Model } from 'mongoose';
+
+interface INote extends Document {
+  text: string;
+}
+
+const noteSchema: Schema = new Schema({
+  text: { type: String, required: true },
+});
+
+const Note: Model<INote> = mongoose.model('Note', noteSchema);
+
+export default Note;
+
+```
+
+Basically we are using Mongoose’s Schema object to explicitely declare to our MongoDB that our notes will have a mandatory propery called text, which is, naturally, a string. We are then defining it as a model with the mongoose.model function. The first parameter is a string that will be used by mongo to define the name of the collection: given a “note” model, we will find a “notes” collection in our database after our very first operation with a Note. Finally, we export the newly created Note model and make it available throughout the application.
