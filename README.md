@@ -4,14 +4,14 @@
 Before we begin, make sure to have globally installed Node.js on your machine, this is crucial to import all our dependencies and set up both the backend and the frontend projects. Also, I will use a local instance of MongoDB for the database, but you can also use a free cluster hosted on MongoDB Atlas.
 
 So, in order to setup the backend side, let’s create a new folder for the project, install our dependencies and set up the structure. In your terminal:
-
+`
 mkdir notes-server
 cd notes-server
 npm init -y
 npm install fastify mongoose --save
 mkdir src
 touch src/index.js
-
+`
 So, line by line: (1) we created a notes-backend folder, (2) entered the folder, (3) initialized a Node project, (4) installed Fastify and Mongoose as dependencies, (5)created a new src folder with (6) an index.js file which will be the root for our application.
 
 Connection to MongoDB and app running
