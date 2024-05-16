@@ -8,7 +8,8 @@ So, in order to setup the backend side, let’s create a new folder for the proj
 mkdir notes-server
 cd notes-server
 npm init -y 
-npm install fastify @types/mongoose --save
+npm install --save dev @types/fastify
+npm install @types/mongoose
 mkdir src
 touch src/index.ts
 ```
@@ -177,6 +178,71 @@ Now that we have our routes, we need to define our handlers for each of the rout
 
 ```
 mkdir src/controllers
-touch src/controllers/notesController.js
+touch src/controllers/notesController.ts
 ```
 Let’s now work on the newly created controller, notesController.ts :
+
+```
+import { FastifyReply, FastifyRequest } from 'fastify';
+import Note from '../models/note';
+
+interface NoteController {
+  create(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+  fetch(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+  get(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+  update(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+  delete(request: FastifyRequest, reply: FastifyReply): Promise<void>;
+}
+
+const noteController: NoteController = {
+  //# create a note
+  create: async (request: FastifyRequest, reply: FastifyReply) => {},
+  
+  //#get the list of notes
+  fetch: async (request: FastifyRequest, reply: FastifyReply) => {},
+  
+  //#get a single note
+  get: async (request: FastifyRequest, reply: FastifyReply) => {},
+  
+  //#update a note
+  update: async (request: FastifyRequest, reply: FastifyReply) => {},
+  
+  //#delete a note
+  delete: async (request: FastifyRequest, reply: FastifyReply) => {},
+}
+
+export default noteController;
+
+```
+
+As a first thing, we are importing our Note model, which will be used to perform operations against our database thanks to Mongoose methods. We have then defined a function for each of the operation, and mark them as asyncronous, since our database will need some amount of time to complete its processing, and we will need to wait for it.
+
+Let’s leave the actual implementation of the handlers for later and let’s just connect our route file with these newly decleared functions. Inside `notesRoutes.ts`, we import the controller and assign the respective functions:
+
+```
+import { FastifyInstance } from 'fastify';
+import notesController from '../controllers/notesController';
+
+export default (app: FastifyInstance) => {
+  //# create a note
+  app.post('/api/notes', notesController.create);
+  
+  //#get the list of notes
+  app.get('/api/notes', notesController.fetch);
+  
+  //#get a single note
+  app.get('/api/notes/:id', notesController.get);
+  
+  //#update a note
+  app.put('/api/notes/:id', notesController.update);
+  
+  //#delete a note
+  app.delete('/api/notes/:id', notesController.delete);
+};
+```
+
+## Defining Route HandlerFunctions
+Let’s now focus on each of our handler functions inside noteControllers.ts.
+
+### Create a note
+In order to create a note the first thing we need to do is to extract the information about the new note we are supposed to create from the body of the request. After that, we will use Mongoose’s create method, which will create a new document and return it back to us. We are then ready to set the proper HTTP status (201) and to return our brand new note, as requested by REST conventions:
