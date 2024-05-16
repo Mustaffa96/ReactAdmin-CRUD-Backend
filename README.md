@@ -1,6 +1,6 @@
 # ReactAdmin-FullStack-CRUD
 
-#Project Setup
+# Project Setup (Backend)
 Before we begin, make sure to have globally installed Node.js on your machine, this is crucial to import all our dependencies and set up both the backend and the frontend projects. Also, I will use a local instance of MongoDB for the database, but you can also use a free cluster hosted on MongoDB Atlas.
 
 So, in order to setup the backend side, let’s create a new folder for the project, install our dependencies and set up the structure. In your terminal:
@@ -51,4 +51,16 @@ app.listen(5000, (err, address) => {
   console.log(`Server running on ${address}`);
 });
 
+```
+
+We imported fastify and mongoose and initialized the app by calling the fastify function. The mongoose.connect function let us specify a mongoUri to connect our database to the app, so I put my local port 27017, where my MongoDB instance is running(if you are using a cluster in MongoDB Atlas, you can find your mongoUri in the connection section, but remember to list your ip address into the whitelist of allowed connections.). At the veryend of the mongoUri, you can specify the name of the db for the project. In my case, I called it notes_db. You can call it whatever you want, if a database with that name does not exist in your MongoDB instance, Mongoose will create it for you!
+
+We then handle the root route of our application with the app.get function. This handles a GET request on the root (‘/’) address of our app. When we want to handle a route on a Fastify App, we need to provide a function with the request and reply parameters. As you may guess, the former contains all the information related to the request while the latter is meant for us to return a proper reply to the endpoint. For now, we just reply.send() a simple string.
+
+Finally, the the app.listen function sets our application listening to the port 3000. Let’s now put it to the test. To do so, first open the package.json file in the root of our applicaion and add the following “start” script inside the scripts object:
+
+```
+"scripts": {
+    "start": "node src/index.js",
+ },
 ```
