@@ -102,8 +102,10 @@ Basically we are using Mongoose’s Schema object to explicitely declare to our 
 ## Defining API Routes (Endpoints)
 Inside of our src folder, we will now create a new routes folder, with a noteRoutes.js file in it. So in the terminal, let’s type this:
 
-`mkdir src/routes
-touch src/routes/noteRoutes.ts`
+```
+mkdir src/routes
+touch src/routes/noteRoutes.ts or New-Item -ItemType File -Force -Path src/routes/noteRoutes.ts
+```
 
 Within this file, we will export a function whose only parameter will be the entire fastify app, and whose return value is a list of routes to be added to the app itself. For each route, we specify the HTTP verb to be handled, a url, and, finally a handler function, that we will define in a second step.
 
