@@ -1,6 +1,7 @@
 // Import fastify & mongoose
 import fastify from 'fastify';
 import mongoose from 'mongoose';
+import noteRoutes from './routes/noteRoutes';
 
 // Initialize Fastify App
 const app = fastify();
@@ -12,14 +13,7 @@ try {
   console.error(e);
 }
 
-// Handle root route
-app.get('/', async (request, reply) => {
-  try {
-    reply.send("Hello world!");
-  } catch (e) {
-    console.error(e);
-  }
-})
+noteRoutes(app);
 
 // Set application listening on port 5000 of localhost
 app.listen({ port: 5000 }, (err, address) => {

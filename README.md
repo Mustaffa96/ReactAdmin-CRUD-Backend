@@ -183,7 +183,7 @@ Now that we have our routes, we need to define our handlers for each of the rout
 
 ```
 mkdir src/controllers
-touch src/controllers/notesController.ts
+touch src/controllers/notesController.ts or New-Item -ItemType File -Force -Path src/controllers/notesController.ts
 ```
 Let’s now work on the newly created controller, notesController.ts :
 
