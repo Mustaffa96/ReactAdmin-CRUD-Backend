@@ -73,14 +73,15 @@ If you now run npm start from your terminal you should see a message saying “S
 At this point, we want to have a notes collection inside our database, and we also need to define the properties that a note document should have. We do so by creating a Note Model and providing a Model Schema, that is, an object with all the specification for a typical note document. Let’s create a new folder and file inside our project; in your project folder terminal:
 
 ```
-mkdir src/models
-touch src/models/Note.ts
+mkdir src/models or New-Item -ItemType Directory -Force -Path src/models
+touch src/models/Note.ts or New-Item -ItemType File -Force -Path src/models/Note.ts
 ```
 
 Let’s edit this new file as follows:
 
 ```
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 interface INote extends Document {
   text: string;
@@ -90,7 +91,7 @@ const noteSchema: Schema = new Schema({
   text: { type: String, required: true },
 });
 
-const Note: Model<INote> = mongoose.model('Note', noteSchema);
+const Note = mongoose.model<INote>('Note', noteSchema);
 
 export default Note;
 
