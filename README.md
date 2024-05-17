@@ -8,10 +8,12 @@ So, in order to setup the backend side, let’s create a new folder for the proj
 mkdir notes-server
 cd notes-server
 npm init -y 
-npm install --save dev @types/fastify
-npm install @types/mongoose
-mkdir src
-touch src/index.ts
+npm install fastify
+npm install @types/node
+npm i -D nodemon
+npm i -D ts-node
+mkdir src or create manually src folder
+touch src/index.ts or cd src
 ```
 So, line by line: (1) we created a notes-backend folder, (2) entered the folder, (3) initialized a Node project, (4) installed Fastify and Mongoose as dependencies, (5)created a new src folder with (6) an index.js file which will be the root for our application.
 
@@ -44,7 +46,7 @@ app.get('/', async (request, reply) => {
 })
 
 // Set application listening on port 5000 of localhost
-app.listen(5000, (err, address) => {
+app.listen({ port: 5000 }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);
@@ -62,7 +64,7 @@ Finally, the the app.listen function sets our application listening to the port 
 
 ```
 "scripts": {
-    "start": "node src/index.ts",
+    "start": "ts-node src/index.ts",
  },
 ```
 If you now run npm start from your terminal you should see a message saying “Server running on http://127.0.0.1:3000”. Open your browser at http://localhost:3000 and you should see our “Hello world!” string, meaning our app is running successfully!
