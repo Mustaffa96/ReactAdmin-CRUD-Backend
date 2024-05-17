@@ -2,6 +2,7 @@
 import fastify from 'fastify';
 import mongoose from 'mongoose';
 import noteRoutes from './routes/noteRoutes';
+import contentRangeHook from './hooks/contentRangeHook'
 
 // Initialize Fastify App
 const app = fastify();
@@ -12,7 +13,7 @@ try {
 } catch (e) {
   console.error(e);
 }
-
+app.addHook('preHandler', contentRangeHook);
 noteRoutes(app);
 
 // Set application listening on port 5000 of localhost

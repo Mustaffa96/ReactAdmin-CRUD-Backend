@@ -1,29 +1,58 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import Note from '../models/Note';
 
-interface NoteController {
-  create(request: FastifyRequest, reply: FastifyReply): Promise<void>;
-  fetch(request: FastifyRequest, reply: FastifyReply): Promise<void>;
-  get(request: FastifyRequest, reply: FastifyReply): Promise<void>;
-  update(request: FastifyRequest, reply: FastifyReply): Promise<void>;
-  delete(request: FastifyRequest, reply: FastifyReply): Promise<void>;
-}
+const controller = {
+  create: async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const note = request.body as any;
+      const newNote = await Note.create(note);
+      reply.code(201).send(newNote);
+    } catch (e) {
+      reply.code(500).send(e);
+    }
+  },
 
-const noteController: NoteController = {
-  //# create a note
-  create: async (request: FastifyRequest, reply: FastifyReply) => {},
-  
-  //#get the list of notes
-  fetch: async (request: FastifyRequest, reply: FastifyReply) => {},
-  
-  //#get a single note
-  get: async (request: FastifyRequest, reply: FastifyReply) => {},
-  
-  //#update a note
-  update: async (request: FastifyRequest, reply: FastifyReply) => {},
-  
-  //#delete a note
-  delete: async (request: FastifyRequest, reply: FastifyReply) => {},
-}
+  fetch: async (_: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const notes = await Note.find({});
+      reply.code(200).send(notes);
+    } catch (e) {
+      reply.code(500).send(e);
+    }
+  },
 
-export default noteController;
+  get: async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const noteId = (request.params as any).id;
+      const note = await Note.findById(noteId);
+      reply.code(200).send(note);
+    } catch (e) {
+      reply.code(500).send(e);
+    }
+  },
+
+  update: async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const noteId = (request.params as any).id;
+      const updates = request.body as any;
+      await Note.findByIdAndUpdate(noteId, updates);
+      const noteToUpdate = await Note.findById(noteId);
+      reply.code(200).send({ data: noteToUpdate });
+    } catch (e) {
+      reply.code(500).send(e);
+    }
+  },
+
+  delete: async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const noteId = (request.params as any).id;
+      const noteToDelete = await Note.findById(noteId);
+      await Note.findByIdAndDelete(noteId);
+      reply.code(200).send({ data: noteToDelete });
+    } catch (e) {
+      reply.code(500).send(e);
+    }
+  },
+};
+
+export default controller;
