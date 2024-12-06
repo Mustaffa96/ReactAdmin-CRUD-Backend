@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import noteRoutes from './routes/noteRoutes';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
+import cors from '@fastify/cors';
 
 const app: FastifyInstance = Fastify({
   logger: true
@@ -10,6 +11,13 @@ const app: FastifyInstance = Fastify({
 
 // Wrap configuration and startup in async function
 const configure = async () => {
+  await app.register(cors, {
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  });
+
   await app.register(swagger, {
     swagger: {
       info: {
