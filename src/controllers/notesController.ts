@@ -1,58 +1,84 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import Note from '../models/Note';
+import { Note, INote } from '../models/Note';
 
-const controller = {
-  create: async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const note = request.body as any;
-      const newNote = await Note.create(note);
-      reply.code(201).send(newNote);
-    } catch (e) {
-      reply.code(500).send(e);
+interface IParams {
+  id: string;
+}
+
+interface IBody {
+  text: string;
+}
+
+export async function createNote(
+  request: FastifyRequest<{ Body: IBody }>,
+  reply: FastifyReply
+) {
+  try {
+    const note = await Note.create(request.body);
+    return reply.code(201).send(note);
+  } catch (error) {
+    return reply.code(500).send(error);
+  }
+}
+
+export async function getNotes(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
+  try {
+    const notes = await Note.find({});
+    return reply.send(notes);
+  } catch (error) {
+    return reply.code(500).send(error);
+  }
+}
+
+export async function getNote(
+  request: FastifyRequest<{ Params: IParams }>,
+  reply: FastifyReply
+) {
+  try {
+    const note = await Note.findById(request.params.id);
+    if (!note) {
+      return reply.code(404).send({ message: 'Note not found' });
     }
-  },
+    return reply.send(note);
+  } catch (error) {
+    return reply.code(500).send(error);
+  }
+}
 
-  fetch: async (_: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const notes = await Note.find({});
-      reply.code(200).send(notes);
-    } catch (e) {
-      reply.code(500).send(e);
+export async function updateNote(
+  request: FastifyRequest<{ Params: IParams; Body: IBody }>,
+  reply: FastifyReply
+) {
+  try {
+    const note = await Note.findByIdAndUpdate(
+      request.params.id,
+      request.body,
+      { new: true }
+    );
+    if (!note) {
+      return reply.code(404).send({ message: 'Note not found' });
     }
-  },
+    return reply.send({ data: note });
+  } catch (error) {
+    return reply.code(500).send(error);
+  }
+}
 
-  get: async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const noteId = (request.params as any).id;
-      const note = await Note.findById(noteId);
-      reply.code(200).send(note);
-    } catch (e) {
-      reply.code(500).send(e);
+export async function deleteNote(
+  request: FastifyRequest<{ Params: IParams }>,
+  reply: FastifyReply
+) {
+  try {
+    const note = await Note.findById(request.params.id);
+    if (!note) {
+      return reply.code(404).send({ message: 'Note not found' });
     }
-  },
-
-  update: async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const noteId = (request.params as any).id;
-      const updates = request.body as any;
-      await Note.findByIdAndUpdate(noteId, updates);
-      const noteToUpdate = await Note.findById(noteId);
-      reply.code(200).send({ data: noteToUpdate });
-    } catch (e) {
-      reply.code(500).send(e);
-    }
-  },
-
-  delete: async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      const noteId = (request.params as any).id;
-      const noteToDelete = await Note.findById(noteId);
-      await Note.findByIdAndDelete(noteId);
-      reply.code(200).send({ data: noteToDelete });
-    } catch (e) {
-      reply.code(500).send(e);
-    }
-  },
-};
-
-export default controller;
+    await Note.findByIdAndDelete(request.params.id);
+    return reply.send(note);
+  } catch (error) {
+    return reply.code(500).send(error);
+  }
+}

@@ -1,26 +1,68 @@
-// Import fastify & mongoose
-import fastify from 'fastify';
+import Fastify, { FastifyInstance } from 'fastify';
 import mongoose from 'mongoose';
 import noteRoutes from './routes/noteRoutes';
-import contentRangeHook from './hooks/contentRangeHook'
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 
-// Initialize Fastify App
-const app = fastify();
+const app: FastifyInstance = Fastify({
+  logger: true
+});
 
-// Connect fastify to mongoose
-try {
-  mongoose.connect('mongodb://localhost:27017/notes_db');
-} catch (e) {
-  console.error(e);
-}
-app.addHook('preHandler', contentRangeHook);
-noteRoutes(app);
+// Wrap configuration and startup in async function
+const configure = async () => {
+  await app.register(swagger, {
+    swagger: {
+      info: {
+        title: 'Notes API',
+        description: 'API documentation for Notes application',
+        version: '1.0.0'
+      },
+      host: 'localhost:5000',
+      schemes: ['http'],
+      consumes: ['application/json'],
+      produces: ['application/json'],
+    }
+  });
 
-// Set application listening on port 5000 of localhost
-app.listen({ port: 5000 }, (err, address) => {
-  if (err) {
+  await app.register(swaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'full',
+      deepLinking: false
+    },
+    uiHooks: {
+      onRequest: function (request, reply, next) { next() },
+      preHandler: function (request, reply, next) { next() }
+    },
+    staticCSP: true,
+    transformStaticCSP: (header) => header
+  });
+};
+
+// Update start function to include configuration
+const start = async () => {
+  try {
+    await configure();
+    await mongoose.connect('mongodb://localhost:27017/notes_db');
+    console.log('MongoDB connected successfully');
+
+    // Add content-range hook
+    // app.addHook('preHandler', (request, reply, done) => {
+    //   contentRangeHook(request, reply)
+    //     .then(() => done())
+    //     .catch(done);
+    // });
+
+    // Register routes
+    await app.register(noteRoutes);
+
+    // Start server
+    await app.listen({ port: 5000 });
+    console.log('Server running on http://localhost:5000');
+  } catch (err) {
     console.error(err);
     process.exit(1);
   }
-  console.log(`Server running on ${address}`);
-});
+};
+
+start();

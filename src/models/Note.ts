@@ -1,14 +1,17 @@
-import mongoose, { Schema, Document } from 'mongoose';
-import { ObjectId } from 'mongodb';
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface INote extends Document {
+export interface INote extends Document {
   text: string;
+  // Add any other fields you want for your notes
 }
 
-const noteSchema: Schema = new Schema({
-  text: { type: String, required: true },
+const NoteSchema = new Schema<INote>({
+  text: { 
+    type: String, 
+    required: true 
+  }
+}, {
+  timestamps: true // Adds createdAt and updatedAt fields
 });
 
-const Note = mongoose.model<INote>('Note', noteSchema);
-
-export default Note;
+export const Note = mongoose.model<INote>('Note', NoteSchema);
