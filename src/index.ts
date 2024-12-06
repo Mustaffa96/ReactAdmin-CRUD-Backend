@@ -51,7 +51,7 @@ const configure = async () => {
 const start = async () => {
   try {
     await configure();
-    await mongoose.connect('mongodb://localhost:27017/notes_db');
+    await mongoose.connect('mongodb://localhost:xxxx/notes_db');// You can get your own databse using MongoDB and monitor it by using MongoDB Compass
     console.log('MongoDB connected successfully');
 
     // Add content-range hook
